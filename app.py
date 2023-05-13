@@ -8,7 +8,7 @@ def hello_world():
 
 
 from io import BytesIO
-from flask import jsonify, request
+from flask import jsonify, request, send_file
 
 @app.route('/url_route', methods=['POST'])
 def upload_file():
@@ -22,10 +22,10 @@ def upload_file():
         print(f"Uploading file {filename}")
         file.save(f"./{filename}")
         d['status'] = 1
-        d['img_url'] = "http://localhost:3000/test.png"
+        d['img_url'] = "http://localhost:3000/img/1.jpg"
 
     except Exception as e:
         print(f"Couldn't upload file {e}")
-        d['status'] = 0
+        # d['status'] = 0
 
     return jsonify(d)

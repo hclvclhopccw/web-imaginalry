@@ -62,6 +62,9 @@ const img = {
 
 function ImageUpload(props) {
   const [files, setFiles] = useState([]);
+  const [finished, setFinished] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+  const [imgResultUrl, setImgResultUrl] = useState(null);
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
       accept: {
@@ -96,6 +99,7 @@ function ImageUpload(props) {
           // Revoke data uri after image is loaded
           onLoad={() => {
             URL.revokeObjectURL(file.preview);
+            setUploaded(true);
           }}
         />
       </div>
@@ -122,7 +126,9 @@ function ImageUpload(props) {
       if (res.status !== 1) {
         alert("Error uploading file");
       } else {
-        alert(res.img_url);
+        setFinished(true);
+        setImgResultUrl(res.img_url);
+        // alert(res.img_url);
       }
     }
   };
@@ -134,7 +140,21 @@ function ImageUpload(props) {
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
       <aside style={thumbsContainer}>{thumbs}</aside>
-      <button onClick={() => uploadFile()}>Upload</button>
+      {uploaded && !finished && (
+        <div>
+          <button onClick={() => uploadFile()}>Generate 3D Style</button>
+          <button onClick={() => uploadFile()}>Generate Anime Style </button>
+          <button onClick={() => uploadFile()}>Generate Pixel Style </button>
+        </div>
+      )}
+      {uploaded && finished && (
+        <button onClick={() => uploadFile()}>Re-generate</button>
+      )}
+      {finished && (
+        <div>
+          <img src={imgResultUrl}></img>
+        </div>
+      )}
     </section>
   );
 }
