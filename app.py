@@ -2,6 +2,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
@@ -9,20 +10,26 @@ def hello_world():
 
 from io import BytesIO
 from flask import jsonify, request, send_file
+from imageProcess import generate
+import time
 
-@app.route('/url_route', methods=['POST'])
+
+@app.route("/url_route", methods=["POST"])
 def upload_file():
     """Handles the upload of a file."""
     d = {}
     try:
-        style = request.args.get('style')
+        style = request.args.get("style")
         print(style)
-        file = request.files['file_from_react']
+        file = request.files["file_from_react"]
         filename = file.filename
         print(f"Uploading file {filename}")
         file.save(f"./{filename}")
-        d['status'] = 1
-        d['img_url'] = "http://localhost:3000/img/1.jpg"
+        outfilename = str(round(time.time())) + ".jpg"
+        print(outfilename)
+        generate(style, filename, outfilename)
+        d["status"] = 1
+        d["img_url"] = "http://localhost:3000/img/" + style + "/" + outfilename
 
     except Exception as e:
         print(f"Couldn't upload file {e}")

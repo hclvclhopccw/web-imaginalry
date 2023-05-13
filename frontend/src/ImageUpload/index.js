@@ -64,6 +64,7 @@ function ImageUpload(props) {
   const [files, setFiles] = useState([]);
   const [finished, setFinished] = useState(false);
   const [uploaded, setUploaded] = useState(false);
+  const [requesting, setRequesting] = useState(false);
   const [imgResultUrl, setImgResultUrl] = useState(null);
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
     useDropzone({
@@ -111,14 +112,14 @@ function ImageUpload(props) {
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);
 
-  let uploadFile = async () => {
+  let uploadFile = async (style) => {
     const file = files[0];
-
+    setRequesting(true);
     if (file != null) {
       const data = new FormData();
       data.append("file_from_react", file);
 
-      let response = await fetch("/url_route?style=3d", {
+      let response = await fetch("/url_route?style=" + style, {
         method: "post",
         body: data,
       });
@@ -128,6 +129,7 @@ function ImageUpload(props) {
       } else {
         setFinished(true);
         setImgResultUrl(res.img_url);
+        setRequesting(false);
         // alert(res.img_url);
       }
     }
@@ -140,17 +142,17 @@ function ImageUpload(props) {
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
       <aside style={thumbsContainer}>{thumbs}</aside>
-      {uploaded && !finished && (
+      {uploaded && !requesting && (
         <div>
-          <button onClick={() => uploadFile()}>Generate 3D Style</button>
-          <button onClick={() => uploadFile()}>Generate Anime Style </button>
-          <button onClick={() => uploadFile()}>Generate Pixel Style </button>
+          <button onClick={() => uploadFile("3d")}>3D Style</button>
+          <button onClick={() => uploadFile("anime")}>Anime Style</button>
+          <button onClick={() => uploadFile("pixel")}>Pixel Style</button>
+          <button onClick={() => uploadFile("smile")}>Make me smile</button>
+          <button onClick={() => uploadFile("old")}>Make me older</button>
         </div>
       )}
-      {uploaded && finished && (
-        <button onClick={() => uploadFile()}>Re-generate</button>
-      )}
-      {finished && (
+      {uploaded && requesting && <div>Loading</div>}
+      {finished && !requesting && (
         <div>
           <img src={imgResultUrl}></img>
         </div>
