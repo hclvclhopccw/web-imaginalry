@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
+// import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { Button, Spac, Typography, Spin, Divider, Card } from 'antd';
+
+const { Text, Link, Title } = Typography;
+
 
 const baseStyle = {
   flex: 1,
@@ -42,8 +50,8 @@ const thumb = {
   border: "1px solid #eaeaea",
   marginBottom: 8,
   marginRight: 8,
-  width: 100,
-  height: 100,
+  width: 300,
+  height: 300,
   padding: 4,
   boxSizing: "border-box",
 };
@@ -141,20 +149,74 @@ function ImageUpload(props) {
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
-      <aside style={thumbsContainer}>{thumbs}</aside>
-      {uploaded && !requesting && (
-        <div>
-          <button onClick={() => uploadFile("3d")}>3D Style</button>
-          <button onClick={() => uploadFile("anime")}>Anime Style</button>
-          <button onClick={() => uploadFile("pixel")}>Pixel Style</button>
-          <button onClick={() => uploadFile("smile")}>Make me smile</button>
-          <button onClick={() => uploadFile("old")}>Make me older</button>
-        </div>
-      )}
-      {uploaded && requesting && <div>Loading</div>}
+      <Grid container spacing={2}>
+        <Grid item>
+          <div style={thumbsContainer}>{thumbs}</div>
+        </Grid>
+        <Grid item >
+        {uploaded && !requesting && (
+          <Box
+            sx={{
+              display: 'flex',
+              '& > *': {
+                m: 1,
+              },
+            }}
+          >
+            {/* <ButtonGroup variant="outlined" orientation="vertical" aria-label="outlined button group"> */}
+            <Card type="inner" title="Style" bordered={true} >
+              {/* <Box><Title level={4} mark>Style</Title></Box> */}
+              <p><Button onClick={() => uploadFile("3d")}>3D</Button></p>
+              <p><Button onClick={() => uploadFile("anime")}>Anime</Button></p>
+              <p><Button onClick={() => uploadFile("pixel")}>Pixel</Button></p>
+              </Card>
+            {/* </ButtonGroup> */}
+            
+            {/* <ButtonGroup variant="outlined" orientation="vertical" aria-label="outlined button group">
+              <Box><Title level={4} mark>Face Changes</Title></Box> */}
+              <Card type="inner" title="Face Changes" bordered={true} >
+                <p><Button onClick={() => uploadFile("young")}>Younger</Button></p>
+                <p><Button onClick={() => uploadFile("old")}>Older</Button></p>
+                <p><Button onClick={() => uploadFile("smile")}>Smile</Button></p>
+                <p><Button onClick={() => uploadFile("halloween")}>Halloween</Button></p>
+                <p><Button onClick={() => uploadFile("hair-color")}>Hair Color</Button></p>
+              </Card>
+            {/* </ButtonGroup> */}
+          
+            {/* <ButtonGroup variant="outlined" orientation="vertical" aria-label="outlined button group">
+              <Box><Title level={4} mark>Background changes</Title></Box> */}
+              <Card type="inner" title="Background changes" bordered={true} >
+                <p><Button onClick={() => uploadFile("bg-beach")}>Beach</Button></p>
+                <p><Button onClick={() => uploadFile("extend")}>Extend</Button></p>
+                <p><Button onClick={() => uploadFile("firework")}>Firework</Button></p>
+                <p><Button onClick={() => uploadFile("christmas")}>Christmas</Button></p>
+                <p><Button onClick={() => uploadFile("high-res")}>High Resolution</Button></p>
+              </Card>
+              <Card type="inner" title="Role Play" bordered={true} >
+                <p><Button onClick={() => uploadFile("robot")}>Robot</Button></p>
+                <p><Button onClick={() => uploadFile("doctor")}>Doctor</Button></p>
+                <p><Button onClick={() => uploadFile("firefighter")}>Firefighter</Button></p>
+                <p><Button onClick={() => uploadFile("president")}>President</Button></p>
+              </Card>
+            {/* </ButtonGroup> */}
+            
+            {/* <button onClick={() => uploadFile("high-res")}>High Res</button> */}
+            {/* <button onClick={() => uploadFile("hair-color")}>hair-color</button> */}
+
+          </Box>
+        )}
+        </Grid>
+      </Grid>
+      
+     
+      {uploaded && requesting && <Spin tip="Loading" size="large">
+        <div className="content" />
+      </Spin>}
       {finished && !requesting && (
         <div>
-          <img src={imgResultUrl}></img>
+          <div><Divider orientation="left">Generated Image</Divider></div>
+          
+          <div><img alt="result" src={imgResultUrl}></img></div>
         </div>
       )}
     </section>

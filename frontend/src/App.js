@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>My Imaginalry</h1>
+        <h1>Please upload a image</h1>
         <ImageUpload />
       </header>
     </div>
